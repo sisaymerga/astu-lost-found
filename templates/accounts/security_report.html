@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-shield-lock"></i> Security Report</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Vulnerability: Insecure Direct Object References (IDOR)</h5>
+            <p><strong>How it could be exploited:</strong> An attacker could manipulate the item ID in the claim URL (e.g., <code>/claim/5/</code>) to claim an item they do not own or that is not found, by simply changing the ID in the browser.</p>
+            <p><strong>How it was prevented:</strong> In the <code>submit_claim</code> view, we filter the item by <code>id=item_id, status='found'</code>. This ensures that only items with status 'found' can be claimed. Additionally, we use <code>@login_required</code> to ensure only authenticated users can access the claim view. For extra security, we also check that the item hasn't already been claimed and that the user hasn't already submitted a claim for the same item.</p>
+            <p>Another protection: We never expose internal IDs in a way that allows privilege escalation, and we always verify ownership/permissions on the server side.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

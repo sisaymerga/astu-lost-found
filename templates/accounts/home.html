@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content%}
+
+
+<div class="hero">
+    <div class="container">
+            <h1>ASTU Digital Lost & Found</h1>
+            <p class="lead">Report lost items, search found items, and claim what's yours.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'report_item' %}" class="btn btn-light btn-lg"><i class="bi bi-plus-circle"></i> Report Lost Item</a>
+            <a href="{% url 'report_item' %}?status=found" class="btn btn-light btn-lg"><i class="bi bi-search"></i> Report Found Item</a>
+        {%else%}
+            <a href="{% url 'login' %}" class="btn btn-light btn-lg"><i class="bi bi-box-arrow-in-right"></i>Login to Report</a>
+            <a href="{% url 'register' %}" class="btn btn-outline-light -btn-lg"><i class="bi bi-person-plus"></i>Register</a>
+        {% endif %}
+    </div>
+</div>
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-grid"></i> Recent Items</h2>
+    <div class="row g-4">
+        {% for item in items%}
+        <div class="col-md-4">
+            <div class="card">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}"  class="card-img-top" alt="{{item.title}}">
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-cneter justify-content-center" style="height: 200px;">
+                        <i class="bi bi-image text-secondary" style="font-size: 3rem;"></i>
+                    </div>
+                {% endif%}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-item-start mb-2">
+                        <h5 class="card-title mb-0">{{ item.title }}</h5>
+                        <span class="badge-{{ item.status }}"> {{ item.get_status_display }}</span>
+                    </div>
+                    <p class="card-text text-muted">{{ item_description|truncatechars:80}}</p>
+                    <div class="small text-muted mb-2">
+                        <i class="bi bi-tag"></i>{{ item.category.name }}<br>
+                        <i class="bi bi-geo-alt"></i>{{ item.location }}<br>
+                        <i class="bi bi-calender"></i>{{ item.date }}
+                    </div>
+                    <p class="small text-muted">Reported by:{{ item.user.username }}</p>
+                    {% if item.status == 'found' and user.is_authenicated %}
+                        <a href="{% url 'submit_claim' item.id %}" class="btn btn-sm btn-warning"><i class="bi bi-hand-thumbs-up"></i> Claim</a>
+                    {% endif %}
+                    {% if item.user == user %}
+                        <div class="mt-2">
+                            <a href="{% url 'edit_item' item.id %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a href="{% url 'delete_item' item.id %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="bi bi-info-circle"></i> No items reported yet.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

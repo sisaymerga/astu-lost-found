@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
+    
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card bg-danger">
+                <i class="bi bi-exclamation-triangle"></i>
+                <div class="stat-number">{{ total_lost }}</div>
+                <div class="stat-label">Lost Items</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-success">
+                <i class="bi bi-check-circle"></i>
+                <div class="stat-number">{{ total_found }}</div>
+                <div class="stat-label">Found Items</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-warning text-dark">
+                <i class="bi bi-archive"></i>
+                <div class="stat-number">{{ total_claimed }}</div>
+                <div class="stat-label">Claimed Items</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-info">
+                <i class="bi bi-check2-all"></i>
+                <div class="stat-number">{{ total_resolved }}</div>
+                <div class="stat-label">Resolved</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card shadow">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="bi bi-bell"></i> Pending Claims ({{ pending_claims }})</h5>
+        </div>
+        <div class="card-body">
+           <a href="{% url 'admin:accounts_claim_changelist' %}" class="btn btn-primary">
+               Manage Claims
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
