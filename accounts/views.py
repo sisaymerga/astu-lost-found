@@ -7,6 +7,7 @@ from .models import Item, Category, Claim
 from django.db.models import Q
 from django.contrib.auth import logout
 from django.core.paginator import Paginator
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 # Create your views here.
@@ -91,7 +92,7 @@ def delete_item(request, item_id):
 
 
 @login_required
-def submit_claim(request, Item_id):
+def submit_claim(request, item_id):
     item = Item.objects.get(id=item_id, status='found')
     
     if request.method == 'POST':
@@ -133,6 +134,31 @@ def my_claims(request):
     return render(request, 'accounts/my_claims.html', {'claims': claims})
 def security_report(request):
     return render(request, 'accounts/security_report.html')
+
 def custom_logout(request):
     logout(request)
     return redirect('login')
+
+@staff_member_required
+def manage_claims(request):
+    claims = Claim.objects.all().order_by('-created_at')
+    return render(request, 'accounts/manage_claims.html', {'claims': claims})
+
+@staff_member_required
+def approve_claim(request, claim_id):
+    claim = get_object_or_404(Claim, id=claim_id)
+    claim.status = 'approved'
+    claim.save()
+    item = claim.item
+    item.status = 'claimed'
+    item.save()
+    messages.success(request, f'Claim for "{item.title}" approved.')
+    return redirect('manage_claims')
+
+@staff_member_required
+def reject_claim(request, claim_id):
+    claim = get_object_or_404(Claim, id=claim_id)
+    claim.status = 'rejected'
+    claim.save()
+    messages.success(request, f'Claim for "{claim.item.title}" rejected.')
+    return redirect('manage_claims')

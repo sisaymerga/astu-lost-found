@@ -14,4 +14,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('security-report/', views.security_report, name='security_report'),
     path('my-claims/', views.my_claims, name='my_claims'),
+    path('manage-claims/', views.manage_claims, name='manage_claims'),
+    path('approve-claim/<int:claim_id>/', views.approve_claim, name='approve_claim'),
+    path('reject-claim/<int:claim_id>/', views.reject_claim, name='reject_claim'),
 ]

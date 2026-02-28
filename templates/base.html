@@ -25,11 +25,9 @@
                         {% csrf_token%}
                         <button type="submit" class="nav-item nav-link btn btn-link" style="border: none; background: none; color: rgba(255, 255, 255, 0.55); padding: 0.5rem 1rem; cursor: pointer;">Logout</button>
                      </form>
-
                     {% if user.is_superuser %}
-                        <a class="nav-item nav-link" href="{% url 'dashboard' %}">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
+                        <a class="nav-item nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        <a class="nav-item nav-link" href="{% url 'manage_claims' %}">Manage Claims</a>
                     {% endif %}
                 {% else %}
                     <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
