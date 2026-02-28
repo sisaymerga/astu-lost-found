@@ -35,7 +35,7 @@ def home(request):
         'selected_status': status,
         'query': query,
     }
-    return render(request, 'core/home.html', context)
+    return render(request, 'accounts/home.html', context)
 
 def register(request):
     if request.method == 'POST':
