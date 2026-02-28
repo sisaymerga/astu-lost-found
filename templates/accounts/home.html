@@ -88,6 +88,13 @@
                 </div>
             </div>
         </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="bi bi-info-circle"></i> No items reported yet.
+            </div>
+        </div>
+        {% endfor %}
         {% if page_obj.has_other_pages %}
         <nav aria-label="Page navigation" class="mt-4">
             <ul class="pagination justify-content-center">
@@ -111,13 +118,6 @@
             </ul>
         </nav>
         {% endif %}
-        {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info text-center">
-                <i class="bi bi-info-circle"></i> No items reported yet.
-            </div>
-        </div>
-        {% endfor %}
     </div>
 </div>
 

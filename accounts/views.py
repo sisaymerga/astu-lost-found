@@ -23,16 +23,19 @@ def home(request):
         items = items.filter(category_id=category_id)
     if status:
         items = items.filter(status=status)
+    paginator = Paginator(items, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     categories = Category.objects.all()
     context = {
-        'items': items,
+        'page_obj': page_obj,
         'categories': categories,
         'selected_category': category_id,
         'selected_status': status,
         'query': query,
     }
-    return render(request, 'accounts/home.html', context)
+    return render(request, 'core/home.html', context)
 
 def register(request):
     if request.method == 'POST':
