@@ -15,6 +15,38 @@
         {% endif %}
     </div>
 </div>
+<div class="container mb-4">
+    <div class="card p-3">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label"><i class="bi bi-search"></i> Search</label>
+                <input type="text" name="q" class="form-control" placeholder="Keyword..." value="{{ query }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"><i class="bi bi-tags"></i> Category</label>
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"><i class="bi bi-flag"></i> Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="lost" {% if selected_status == 'lost' %}selected{% endif %}>Lost</option>
+                    <option value="found" {% if selected_status == 'found' %}selected{% endif %}>Found</option>
+                    <option value="claimed" {% if selected_status == 'claimed' %}selected{% endif %}>Claimed</option>
+                    <option value="resolved" {% if selected_status == 'resolved' %}selected{% endif %}>Resolved</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i> Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="container">
     <h2 class="mb-4"><i class="bi bi-grid"></i> Recent Items</h2>
     <div class="row g-4">

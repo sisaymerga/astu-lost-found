@@ -18,25 +18,20 @@ def home(request):
     status = request.GET.get('status')
 
     if query:
-        item = items.filter(Q(title__icontains=query) | Q(description__icontains=query))
+        items = items.filter(Q(title__icontains=query) | Q(description__icontains=query))
     if category_id:
-        items = item.filter(category_id=category_id)
+        items = items.filter(category_id=category_id)
     if status:
-        items = item.filter(status=status)
-    
-    paginator = Paginator(items, 6) 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        items = items.filter(status=status)
 
     categories = Category.objects.all()
     context = {
-        'items':items,
+        'items': items,
         'categories': categories,
         'selected_category': category_id,
         'selected_status': status,
         'query': query,
     }
-
     return render(request, 'accounts/home.html', context)
 
 def register(request):
